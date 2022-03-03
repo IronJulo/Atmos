@@ -19,3 +19,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+web/backend/app/config/db.config.js
+
+web/backend/app/config/env.config.js

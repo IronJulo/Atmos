@@ -1,0 +1,8 @@
+//Copy, rename this file to db.config.js and fill it.
+module.exports = {
+    HOST: "HOST",
+    USER: "USER",
+    PASSWORD: "PASSWORD",
+    DB: "DB",
+    dialect: "dialect"
+}
