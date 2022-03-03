@@ -20,5 +20,9 @@ app.listen(env.PORT, () => {
     console.log(`Server is running on port ${env.PORT}.`);
 })
 
-require("./app/routes/user.routes")(app);
 require("./app/routes/auth.routes")(app);
+require("./app/routes/dashboard.routes")(app);
+require("./app/routes/graph.routes")(app);
+require("./app/routes/master_node.routes")(app);
+require("./app/routes/slave_node.routes")(app);
+require("./app/routes/user.routes")(app);
