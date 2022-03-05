@@ -1,6 +1,7 @@
 const env = require("../config/env.config.js");
 const userService = require("../services/user.service");
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt')
 
 let refreshTokens = []; //TODO CHANGE THIS TO REDIS / DB !IMPORTANT
 
@@ -22,6 +23,13 @@ class InvalidTokenError extends Error {
         this.status = 403;
     }
 }
+
+class SequelizeConstraintError extends Error {
+    constructor(message, status) {
+        super(message);
+        this.status = status;
+    }
+}
 exports.InvalidTokenError = InvalidTokenError;
 
 
@@ -33,9 +41,32 @@ function generateRefreshToken(user) {
     return jwt.sign(user, env.REFRESH_TOKEN_SECRET);
 }
 
+function generateRefreshToken(user) {
+    return jwt.sign(user, env.REFRESH_TOKEN_SECRET);
+}
+
+function hashPassword(password) {
+    let passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
+    return passwordHash;
+}
+
+exports.register = async ({ name, email, password }) => {
+    try {
+        const passwordHash = hashPassword(password);
+        await userService.create({ name, email, password: passwordHash });
+    } catch (err) {
+        console.log(err.errors[0].message);
+        throw new SequelizeConstraintError(err.errors[0].message, 409);
+    }
+}
+
 exports.login = async (email, password) => {
     const user = await userService.findOneByEmail(email);
-    if (!user || user.password != password) {
+    console.log("bcrypt.compareSync(passwordHash, user.password)");
+    console.log(bcrypt.compareSync(password, user.password));
+
+    if (!user || !bcrypt.compareSync(password, user.password)) {
         throw new InvalidEmailOrPasswordError(); // TODO hash password
     }
 
