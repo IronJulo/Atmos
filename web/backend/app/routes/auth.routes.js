@@ -3,6 +3,9 @@ module.exports = app => {
     var router = require("express").Router();
 
     router.post("/login", auth.login);
-    router.get("/refresh", auth.refreshToken);
-    app.use('/api/auth', router);
+    router.post("/refresh", auth.refreshToken);
+    router.post("/logout", auth.logout);
+    router.get("/user", auth.autenticateToken, auth.user);
+
+    app.use('/auth', router);
 }

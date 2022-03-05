@@ -3,5 +3,5 @@ module.exports = app => {
     var router = require("express").Router();
 
     router.get("/", master_node.get);
-    app.use('/api/master_nodes', router);
+    app.use('/master_nodes', router);
 }

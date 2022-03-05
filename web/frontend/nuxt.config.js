@@ -1,10 +1,11 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - frontend',
-    title: 'frontend',
+    titleTemplate: '%s - Atmos',
+    title: 'Atmos',
     htmlAttrs: {
       lang: 'en',
     },
@@ -38,12 +39,18 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    '@nuxtjs/proxy'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    proxy: true,
+    baseUrl: 'http://loaclhost:3000/'
+  },
+
+  proxy: {
+    '/api/': { target: 'http://localhost:3001/', pathRewrite: { '^/api/': '' } }
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -64,7 +71,56 @@ export default {
       },
     },
   },
+  router: {
+    middleware: ['auth']
+  },
+  auth: {
+    strategies: {
+      local: {
+        scheme: 'refresh',
+        token: {
+          property: 'accessToken',
+          global: true,
+          type: 'Bearer'
+        },
+        refreshToken: {
+          property: 'refreshToken',
+          data: 'refreshToken',
+        },
+        user: {
+          property: false,
+          autoFetch: true
+        },
+        endpoints: {
+          login: {
+            url: '/api/auth/login',
+            method: 'post',
+          },
+          logout: {
+            url: '/api/auth/logout',
+            method: 'post'
+          },
+          refresh: {
+            url: '/api/auth/refresh',
+            method: 'post',
+          },
+          user: {
+            url: '/api/auth/user',
+            method: 'get',
+          }
+        }
+      }
+    },
+    redirect: {
+      login: '/login',
+      logout: '/register',
+      home: '/'
+    },
+    watchLoggedIn: true,
+    rewriteRedirects: false,
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
 }

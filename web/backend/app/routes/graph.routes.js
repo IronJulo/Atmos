@@ -3,5 +3,5 @@ module.exports = app => {
     var router = require("express").Router();
 
     router.get("/", graph.get);
-    app.use('/api/graphs', router);
+    app.use('/graphs', router);
 }
