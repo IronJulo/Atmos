@@ -1,65 +1,69 @@
 const env = require("../config/env.config.js");
+const userService = require("../services/user.service");
+const authService = require("../services/auth.service");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
+const Op = db.Sequelize.Op;
+const User = db.users;
 
-let refreshTokens = []; //TODO CHANGE THIS TO REDIS / DB !IMPORTANT
 
-exports.register = [(req, res) => {
-    //verrify user TODO
-    console.log("user registering in");
-    const { email, name, password } = req.body;
-    console.log({ email, name, password });
-    res.sendStatus(200);
-}];
-
-exports.login = [(req, res) => {
-    //verrify user TODO
-    console.log("user logging in");
-
-    const { email, name } = req.body;
-    const user = { email, name };
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
-    refreshTokens.push(refreshToken);
-    res.json({ accessToken, refreshToken });
-}];
-
-exports.logout = (req, res) => {
-    console.log("user is logging out");
-    const refreshToken = req.body.refreshToken;
-    if (!refreshToken) return res.sendStatus(400); // TODO change use celebrate
-    if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
-    jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
-        refreshTokens.splice(refreshToken.indexOf);
-        res.sendStatus(200);
-    });
+exports.register = async (req, res, next) => {
+    try {
+        console.log("user registering in");
+        const { email, name, password } = req.body;
+        const user = await userService.create({ email, name, password });
+        res.status(201).json(user);
+    } catch (err) {
+        next(err);
+    }
 };
 
-exports.user = (req, res) => {
-    console.log("user requested his data");
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    res.json(jwt.decode(token));
+exports.login = async (req, res, next) => {
+    try {
+        console.log("user logging in");
+        // TODO verrify input w/ celebrate
+        const { email, password } = req.body;
+        const tokens = await authService.login(email, password);
+        res.status(200).json(tokens);
+    } catch (err) {
+        next(err);
+    }
 };
 
-function generateAccessToken(user) {
-    return jwt.sign(user, env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
-}
+exports.logout = (req, res, next) => {
+    try {
+        console.log("user is logging out");
+        const { refreshToken } = req.body.refreshToken;
+        if (!refreshToken) return res.sendStatus(400); // TODO change use celebrate
 
-function generateRefreshToken(user) {
-    return jwt.sign(user, env.REFRESH_TOKEN_SECRET);
-}
+        authService.logout(refreshToken);
 
-exports.refreshToken = (req, res) => {
+        res.sendStatus(204);
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.user = (req, res, next) => {
+    try {
+        console.log("user requested his data");
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if (!token) {
+            throw new authService.InvalidTokenError();
+        }
+        const user = authService.user(token)
+        res.json(user);
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.refreshToken = (req, res, next) => {
     const { refreshToken } = req.body;
     if (!refreshToken) return res.sendStatus(400); // TODO change use celebrate
-    if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
-    jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
-        const acessToken = generateAccessToken({ email: user.email, name: user.name });
-        res.json({ accessToken: acessToken });
-    });
+    const token = authService.refreshToken(refreshToken);
+    res.status(201).json(token);
 };
 
 /**

@@ -1,3 +1,4 @@
+const userRepository = require("../repository/user.repository");
 const db = require("../models");
 const User = db.users;
 
