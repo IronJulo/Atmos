@@ -80,8 +80,8 @@ export default {
         scheme: 'refresh',
         token: {
           property: 'accessToken',
+          type: 'Bearer',
           global: true,
-          type: 'Bearer'
         },
         refreshToken: {
           property: 'refreshToken',

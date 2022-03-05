@@ -4,9 +4,17 @@ const db = require("../models");
 
 let refreshTokens = []; //TODO CHANGE THIS TO REDIS / DB !IMPORTANT
 
+exports.register = [(req, res) => {
+    //verrify user TODO
+    console.log("user registering in");
+    const { email, name, password } = req.body;
+    console.log({ email, name, password });
+    res.sendStatus(200);
+}];
+
 exports.login = [(req, res) => {
     //verrify user TODO
-    console.log("user logged in");
+    console.log("user logging in");
 
     const { email, name } = req.body;
     const user = { email, name };
@@ -18,8 +26,6 @@ exports.login = [(req, res) => {
 
 exports.logout = (req, res) => {
     console.log("user is logging out");
-    console.log("req.body");
-    console.log(req.body);
     const refreshToken = req.body.refreshToken;
     if (!refreshToken) return res.sendStatus(400); // TODO change use celebrate
     if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
@@ -31,10 +37,9 @@ exports.logout = (req, res) => {
 };
 
 exports.user = (req, res) => {
+    console.log("user requested his data");
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    console.log("jwt.decode(token)");
-    console.log(jwt.decode(token));
     res.json(jwt.decode(token));
 };
 
@@ -52,7 +57,7 @@ exports.refreshToken = (req, res) => {
     if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
     jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
-        const acessToken = generateAccessToken({ email: user.email });
+        const acessToken = generateAccessToken({ email: user.email, name: user.name });
         res.json({ accessToken: acessToken });
     });
 };
@@ -68,8 +73,6 @@ exports.autenticateToken = (req, res, next) => {
     jwt.verify(token, env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
         req.user = user;
-        console.log(user);
-
         next();
     });
 };

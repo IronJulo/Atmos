@@ -1,20 +1,16 @@
 <template>
   <v-container fluid fill-height>
-    <form-user-auth title="Login" buttonText="Login" @submit="submitAuth" />
+    <form-user-auth title="Login" buttonText="Login" @submit="loginUser" />
   </v-container>
 </template>
 
 <script>
 export default {
+  $auth: false,
   methods: {
-    async submitAuth(loginInfo) {
-      console.log('loginInfo')
-      console.log(loginInfo)
-      await this.$auth.loginWith('local', {
-        data: loginInfo,
-      })
-      console.log(this.$auth)
-      this.$router.push('/')
+    async loginUser(loginInfo) {
+      await this.$auth.loginWith('local', { data: loginInfo })
+      this.$router.push('/') // TODO redirect to previous page
     },
   },
 }

@@ -9,10 +9,8 @@ export default {
   name: 'lougout',
   async mounted() {
     const { refreshToken } = this.$auth.strategy
-    console.log(refreshToken.get())
-    await this.$auth.logout({
-      data: { refreshToken: refreshToken.get() },
-    })
+    await this.$auth.logout({ data: { refreshToken: refreshToken.get() } })
+    this.$router.push('/')
   },
 }
 </script>
