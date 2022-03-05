@@ -1,17 +1,13 @@
 const env = require("../config/env.config.js");
-const userService = require("../services/user.service");
 const authService = require("../services/auth.service");
 const jwt = require("jsonwebtoken");
-const db = require("../models");
-const Op = db.Sequelize.Op;
-const User = db.users;
 
 
 exports.register = async (req, res, next) => {
     try {
         console.log("user registering in");
         const { email, name, password } = req.body;
-        const user = await userService.create({ email, name, password });
+        const user = await authService.register({ email, name, password });
         res.status(201).json(user);
     } catch (err) {
         next(err);
@@ -32,13 +28,15 @@ exports.login = async (req, res, next) => {
 
 exports.logout = (req, res, next) => {
     try {
-        console.log("user is logging out");
-        const { refreshToken } = req.body.refreshToken;
+        const { refreshToken } = req.body;
+        console.log(refreshToken);
+
         if (!refreshToken) return res.sendStatus(400); // TODO change use celebrate
 
         authService.logout(refreshToken);
 
         res.sendStatus(204);
+
     } catch (err) {
         next(err);
     }
