@@ -6,11 +6,20 @@
 
 <script>
 export default {
-  $auth: false,
+  auth: false,
+
   methods: {
     async loginUser(loginInfo) {
-      await this.$auth.loginWith('local', { data: loginInfo })
-      this.$router.push('/') // TODO redirect to previous page
+      try {
+        await this.$auth.loginWith('local', {
+          data: loginInfo,
+        })
+
+        this.$dialog.notify.success(`Wellcome back ${this.$auth.user.name}`)
+        this.$router.push('/')
+      } catch (err) { 
+        this.$dialog.notify.error('error ' + (err?.response?.data?.message || err?.message))
+      }
     },
   },
 }

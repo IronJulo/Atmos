@@ -14,9 +14,18 @@ export default {
   auth: false,
   methods: {
     async registerUser(registerInfo) {
-      await this.$axios.post('/api/auth/register', registerInfo);
-      await this.$auth.loginWith('local', { data: registerInfo });
-      this.$router.push('/')
+      try {
+        await this.$axios.post('/api/auth/register', registerInfo)
+        await this.$auth.loginWith('local', { data: registerInfo })
+        this.$dialog.notify.success(
+          `Wellcome ${this.$auth.user.name} we hope that you'll like our software`
+        )
+        this.$router.push('/')
+      } catch (err) {
+        this.$dialog.notify.error(
+          'error ' + (err?.response?.data?.message || err?.message)
+        )
+      }
     },
   },
 }
