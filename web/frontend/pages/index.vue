@@ -6,6 +6,7 @@
     <v-btn to="/logout"> Logout </v-btn>
     <v-btn to="/register"> Register </v-btn>
     <v-btn to="/login"> Login </v-btn>
+    <v-btn to="/dashboards"> Dashboards </v-btn>
     <v-img
       contain
       :src="require(`~/assets/images/Atmos_logo.png`)"

@@ -19,7 +19,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn to="/register">Register</v-btn>
-          <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
         <v-btn color="primary" :disabled="!valid" @click="submit">Submit</v-btn>
       </v-card-actions>
     </v-card>

@@ -6,6 +6,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
     dialect: dbConfig.dialect,
     dialectOptions: {},
+    logging: false,
 });
 
 db.Sequelize = Sequelize;
@@ -14,15 +15,15 @@ db.sequelize = sequelize;
 db.users = require("./user.model.js")(sequelize, Sequelize);
 db.dashboards = require("./dashboard.model.js")(sequelize, Sequelize);
 db.graphs = require("./graph.model.js")(sequelize, Sequelize);
-db.master_nodes = require("./master_node.model.js")(sequelize, Sequelize);
-db.slave_nodes = require("./slave_node.model.js")(sequelize, Sequelize);
+db.masterNodes = require("./masterNode.model.js")(sequelize, Sequelize);
+db.slaveNodes = require("./slaveNode.model.js")(sequelize, Sequelize);
 
 db.users.hasMany(db.dashboards);
-db.users.hasMany(db.master_nodes);
+db.users.hasMany(db.masterNodes);
 
 db.dashboards.hasMany(db.graphs);
 db.dashboards.hasMany(db.graphs);
 
-db.master_nodes.hasMany(db.slave_nodes);
+db.masterNodes.hasMany(db.slaveNodes); 
 
 module.exports = db;
