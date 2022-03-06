@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const MasterNode = sequelize.define("master_node", {
+    const MasterNode = sequelize.define("masterNode", {
         name: {
             type: Sequelize.STRING
         },
