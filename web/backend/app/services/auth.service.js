@@ -63,8 +63,6 @@ exports.register = async ({ name, email, password }) => {
 
 exports.login = async (email, password) => {
     const user = await userService.findOneByEmail(email);
-    console.log("bcrypt.compareSync(passwordHash, user.password)");
-    console.log(bcrypt.compareSync(password, user.password));
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
         throw new InvalidEmailOrPasswordError(); // TODO hash password

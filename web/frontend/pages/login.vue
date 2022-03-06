@@ -1,6 +1,6 @@
 <template>
   <v-container fluid fill-height>
-    <form-user-auth title="Login" buttonText="Login" @submit="loginUser" />
+    <form-login @submit="loginUser" />
   </v-container>
 </template>
 
@@ -17,8 +17,10 @@ export default {
 
         this.$dialog.notify.success(`Wellcome back ${this.$auth.user.name}`)
         this.$router.push('/')
-      } catch (err) { 
-        this.$dialog.notify.error('error ' + (err?.response?.data?.message || err?.message))
+      } catch (err) {
+        this.$dialog.notify.error(
+          'Error ' + (err?.response?.data?.message || err?.message)
+        )
       }
     },
   },

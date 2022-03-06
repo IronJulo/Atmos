@@ -1,11 +1,6 @@
 <template>
   <v-container fluid fill-height>
-    <form-user-auth
-      title="Register"
-      buttonText="Register"
-      @submit="registerUser"
-      hasName
-    />
+    <form-register @submit="registerUser" />
   </v-container>
 </template>
 
@@ -23,7 +18,7 @@ export default {
         this.$router.push('/')
       } catch (err) {
         this.$dialog.notify.error(
-          'error ' + (err?.response?.data?.message || err?.message)
+          'Error ' + (err?.response?.data?.message || err?.message)
         )
       }
     },

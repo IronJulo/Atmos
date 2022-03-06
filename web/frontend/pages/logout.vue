@@ -17,7 +17,7 @@ export default {
       this.$router.push('/')
     } catch (err) {
       this.$dialog.notify.error(
-        'error ' + (err?.response?.data?.message || err?.message)
+        'Error ' + (err?.response?.data?.message || err?.message)
       )
     }
   },
