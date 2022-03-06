@@ -34,11 +34,7 @@ exports.InvalidTokenError = InvalidTokenError;
 
 
 function generateAccessToken(user) {
-    return jwt.sign(user, env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
-}
-
-function generateRefreshToken(user) {
-    return jwt.sign(user, env.REFRESH_TOKEN_SECRET);
+    return jwt.sign(user, env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
 }
 
 function generateRefreshToken(user) {
@@ -47,7 +43,6 @@ function generateRefreshToken(user) {
 
 function hashPassword(password) {
     let passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-
     return passwordHash;
 }
 
@@ -56,7 +51,6 @@ exports.register = async ({ name, email, password }) => {
         const passwordHash = hashPassword(password);
         await userService.create({ name, email, password: passwordHash });
     } catch (err) {
-        console.log(err.errors[0].message);
         throw new SequelizeConstraintError(err.errors[0].message, 409);
     }
 }
@@ -68,13 +62,13 @@ exports.login = async (email, password) => {
         throw new InvalidEmailOrPasswordError(); // TODO hash password
     }
 
-    const { name } = user;
+    const { name, id } = user;
 
-    const refreshToken = generateRefreshToken({ name, email });
+    const refreshToken = generateRefreshToken({ name, email, id});
     refreshTokens.push(refreshToken);
 
     return {
-        accessToken: generateAccessToken({ name, email }),
+        accessToken: generateAccessToken({ name, email, id}),
         refreshToken
     };
 }
@@ -88,8 +82,7 @@ exports.logout = (refreshToken) => {
 
 exports.user = (token) => {
     try {
-        const decoded = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
-        console.log(decoded);
+        const decoded = jwt.verify(token, env.ACCESS_TOKEN_SECRET); //todo jwt.decode instead
         return { email: decoded.email, name: decoded.name };
     } catch (err) {
         throw new InvalidTokenError();
@@ -97,7 +90,7 @@ exports.user = (token) => {
 }
 
 exports.refreshToken = (refreshToken) => {
-    if (!refreshTokens.includes(refreshToken)) {
+    if (!refreshTokens.includes(refreshToken)) { //TODO replace call to db
         throw new InvalidRefreshTokenError();
     }
     try {
@@ -107,3 +100,21 @@ exports.refreshToken = (refreshToken) => {
         throw new InvalidRefreshTokenError();
     }
 }
+/**
+ * Autenticate the jwt token
+ */
+exports.autenticateToken = (req, res, next) => {
+    try {
+        console.log("cheking user token");
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if (token == null) return res.sendStatus(401);
+
+        const decoded = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
+        req.user = { email: decoded.email, name: decoded.name, id: decoded.id };
+        next()
+
+    } catch (err) {
+        throw new InvalidTokenError();
+    }
+};

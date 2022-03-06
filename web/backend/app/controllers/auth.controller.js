@@ -29,7 +29,6 @@ exports.login = async (req, res, next) => {
 exports.logout = (req, res, next) => {
     try {
         const { refreshToken } = req.body;
-        console.log(refreshToken);
 
         if (!refreshToken) return res.sendStatus(400); // TODO change use celebrate
 
@@ -46,10 +45,7 @@ exports.user = (req, res, next) => {
     try {
         console.log("user requested his data");
         const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        if (!token) {
-            throw new authService.InvalidTokenError();
-        }
+        const token = authHeader.split(' ')[1];
         const user = authService.user(token)
         res.json(user);
     } catch (err) {
@@ -64,17 +60,3 @@ exports.refreshToken = (req, res, next) => {
     res.status(201).json(token);
 };
 
-/**
- * Autenticate the jwt token
- */
-exports.autenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) return res.sendStatus(401);
-
-    jwt.verify(token, env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
-};
