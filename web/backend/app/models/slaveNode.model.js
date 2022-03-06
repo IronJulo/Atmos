@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const SlaveNode = sequelize.define("slave_node", {
+    const SlaveNode = sequelize.define("slaveNode", {
         x: {
             type: Sequelize.INTEGER
         },
