@@ -1,7 +1,10 @@
 module.exports = app => {
-    const graph = require("../controllers/graph.controller.js");
+    const graphController = require("../controllers/graph.controller.js");
+    const authService = require("../services/auth.service");
+
     var router = require("express").Router();
 
-    router.get("/", graph.get);
-    app.use('/graphs', router);
+    router.get("/graphs/:dashbaoardId", authService.autenticateToken, graphController.getDashboardGraphs);
+    //router.get("/graph/:graphId", authService.autenticateToken, graphController.getGraph);
+    app.use('/', router);
 }
