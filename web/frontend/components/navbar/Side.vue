@@ -93,7 +93,7 @@ export default {
     }
   },
   async fetch() {
-    this.devices = await this.$axios.$get(`api/master-nodes/`)
+    this.devices = await this.$axios.$get(`api/emitters/`)
     this.dashboards = await this.$axios.$get(`api/dashboards/`)
   },
   computed: {},

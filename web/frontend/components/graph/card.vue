@@ -44,7 +44,7 @@ export default {
     },
   }),
   async fetch() {
-    this.rawData = await this.$axios.$get(`/api/graph-data/${this.graph.id}`)
+    this.rawData = await this.$axios.$get(`/api/data/${this.graph.id}`)
   },
   computed: {
     cardClasses() {
