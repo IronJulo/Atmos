@@ -5,9 +5,9 @@ class UnknownUserError extends Error {
     }
 };
 
-class UnknownMasterNodeError extends Error {
+class UnknownEmitterError extends Error {
     constructor() {
-        super("Unknown master node");
+        super("Unknown emitter");
         this.status = 404;
     }
 };
@@ -35,7 +35,7 @@ class NotFoundError extends Error {
 
 module.exports = {
     UnknownUserError,
-    UnknownMasterNodeError,
+    UnknownEmitterError,
     UnableToCreateError,
     PermissionDeniedError,
     NotFoundError

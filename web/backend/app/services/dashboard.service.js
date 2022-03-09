@@ -21,9 +21,5 @@ exports.findAllOfUser = (id) => {
 };
 
 exports.create = async ({ name, userId }) => {
-    try {
-        await DashboardRepository.create({ name, userId });
-    } catch (err) {
-        //TODO
-    }
+    await DashboardRepository.create({ name, userId });
 };
