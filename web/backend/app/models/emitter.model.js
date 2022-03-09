@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const MasterNode = sequelize.define("masterNode", {
+    const Emitter = sequelize.define("emitter", {
         name: {
             type: Sequelize.STRING
         },
@@ -7,5 +7,5 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         }
     });
-    return MasterNode;
+    return Emitter;
 };
