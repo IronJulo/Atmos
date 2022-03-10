@@ -22,12 +22,17 @@ module.exports = app => {
     /**
      * Edit specific graphs querry  
      */
-     router.post("/graphs/:graphId/queries", authService.autenticateToken, graphController.updateGraphqueries)
+     router.put("/graphs/:graphId/queries", authService.autenticateToken, graphController.updateGraphqueries)
      
     /**
      * Get specific graphs data 
      */
     router.get("/graphs/:graphId/queries/data", authService.autenticateToken, graphController.getGraphData);
+
+    /**
+     * Get specific graphs data by executing the querri in post body !! proceed with caution
+     */
+     router.post("/graphs/:graphId/data", authService.autenticateToken, graphController.getGraphData2);
 
     app.use('/', router);
 }

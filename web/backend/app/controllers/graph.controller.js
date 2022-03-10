@@ -1,7 +1,7 @@
 const db = require("../models");
 const Op = db.Sequelize.Op;
 
-exports.getDashboardGraphs = (req, res) => {
+exports.getDashboardGraphs = (req, res, next) => {
     res.status(202).send(
         [
             {
@@ -86,5 +86,26 @@ exports.getDashboardGraphs = (req, res) => {
             }
         ]
     );
+    return;
+};
+
+exports.getGraph = (req, res, next) => {
+    res.status(501).send({message: "not implemented yet"});
+    return;
+};
+exports.getGraphQueries = (req, res, next) => {
+    res.status(501).send({message: "not implemented yet"});
+    return;
+};
+exports.updateGraphqueries = (req, res, next) => {
+    res.status(501).send({message: "not implemented yet"});
+    return;
+};
+exports.getGraphData = (req, res, next) => {
+    res.status(501).send({message: "not implemented yet"});
+    return;
+};
+exports.getGraphData2 = (req, res, next) => {
+    res.status(501).send({message: "not implemented yet"});
     return;
 };
