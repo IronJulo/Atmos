@@ -3,9 +3,8 @@ const errorService = require("../services/error.service");
 
 exports.getUserDashboards = async (req, res, next) => {
     try {
-        console.log("User requested his dashboards");
-        const dashboards = await dashboardService.findAllOfUser(req.user.id)
-
+        console.log("User requested his dashboards!");
+        const dashboards = await dashboardService.findAllByUser(req.user);
         let dashboardsList = [];
         dashboards.map(dashboard => (
             dashboardsList.push({
@@ -13,9 +12,7 @@ exports.getUserDashboards = async (req, res, next) => {
                 name: dashboard.name,
             })
         ));
-
-        res.status(200).json(dashboardsList);
-
+        return res.status(200).json(dashboardsList);
     } catch (err) {
         next(err);
     }
@@ -23,27 +20,25 @@ exports.getUserDashboards = async (req, res, next) => {
 
 exports.getDashboardById = async (req, res, next) => {
     try {
-        console.log("User requested 1 dashboard");
-        const dashboard = await dashboardService.findOneByIds(req.user.id, req.params.dashboardId)
-
+        console.log("User requested 1 dashboard!");
+        const dashboard = await dashboardService.findOneById(req.params.dashboardId);
+        if (dashboard.userId != req.user.id) {
+            throw new errorService.PermissionDeniedError();
+        }
         res.status(200).json({
             id: dashboard.id,
             name: dashboard.name
         });
-
     } catch (err) {
         next(err);
     }
 };
 
-exports.createDashboard = (req, res, next) => {
+exports.createDashboard = async (req, res, next) => {
     try {
-        console.log("User requested to create a new dashboard");
-        const { name } = req.body;
-        const dashboard = dashboardService.create({ name, userId: req.user.id })
-        if (!dashboard) {
-            throw new errorService.UnableToCreateError();
-        }
+        console.log("User requested to create a new dashboard!");
+        const { name } = req.body; // TODO celebrate
+        await dashboardService.create({ name, userId: req.user.id })
         res.sendStatus(200);
     } catch (err) {
         next(err);
