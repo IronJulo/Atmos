@@ -9,13 +9,13 @@
       <template #default="{ hover }">
         <v-card-title>
           {{ graph.label }}
-          <template v-if="hover">
+          <template v-if="hover && rawData.series">
             <v-spacer />
-            <v-btn icon small class="mr-2">
+            <v-btn v-if="editorMode" icon small class="mr-2">
               <v-icon>mdi-resize</v-icon>
             </v-btn>
-            <v-btn icon small class="mr-2">
-              <v-icon>mdi-cog</v-icon>
+            <v-btn v-if="editorMode" icon small @click="deleteGraph">
+              <v-icon>mdi-delete-forever-outline</v-icon>
             </v-btn>
             <v-btn icon small :loading="$fetchState.pending" @click="$fetch">
               <v-icon>mdi-refresh</v-icon>
@@ -25,12 +25,28 @@
       </template>
     </v-hover>
     <apexchart
-    class="pa-0 ma-0"
+      v-if="rawData.series"
+      :id="chartId"
+      class="pr-2"
       width="100%"
+      max-width="100%"
       :height="height"
+      :max-height="height"
       :options="chartOptions"
       :series="series"
     />
+    <div v-else>
+      <v-card-title class="text-xs-center">
+        <h5>Error graph data not found</h5>
+      </v-card-title>
+      <v-layout justify-center>
+        <v-card-actions>
+          <v-btn primary @click="$fetch">
+            <span>Reload</span>
+          </v-btn>
+        </v-card-actions>
+      </v-layout>
+    </div>
   </v-card>
 </template>
 
@@ -41,6 +57,10 @@ export default {
       type: Object,
       required: true,
     },
+    editorMode: {
+      type: Boolean,
+      required: true,
+    },
   },
   data: () => ({
     rawData: {
@@ -48,9 +68,17 @@ export default {
     },
   }),
   async fetch() {
-    this.rawData = await this.$axios.$get(`/api/graphs/${this.graph.id}/data`)
+    this.rawData = await this.$axios.$get(`/api/graphs/${this.graph.i}/data`)
+  },
+  methods: {
+    render() {
+      this.chart.render()
+    },
   },
   computed: {
+    chartId() {
+      return `chart${this.graph.i}`
+    },
     cardClasses() {
       return {
         'fill-height': this.fullHeight,
@@ -72,6 +100,7 @@ export default {
           type: 'datetime',
         },
         chart: {
+          redrawOnParentResize: true,
           animations: {
             enabled: true,
             easing: 'easeinout',
