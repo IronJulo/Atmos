@@ -1,8 +1,5 @@
-const db = require("../models");
-const Op = db.Sequelize.Op;
-
 exports.getData = async (req, res, next) => {
-    console.log(req.querry);
+    console.log("DEPRECATED ------------------------------------------------------");
     res.status(200).send({
         "columns": [
             "timestamp",

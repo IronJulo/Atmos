@@ -5,7 +5,7 @@ module.exports = app => {
     var router = require("express").Router();
     
     /**
-    * Get graphs ho a specific dashboard 
+    * Deprecated 
     */
     router.get("/data/", authService.autenticateToken, graphDataController.getData);
     app.use('/', router);
