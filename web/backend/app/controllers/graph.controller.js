@@ -16,13 +16,13 @@ exports.getDashboardGraphs = async (req, res, next) => {
         let graphList = [];
         graphs.map(graph => (
             graphList.push({
-                id: graph.id,
-                order: graph.order,
-                type: graph.type,
-                width: graph.width,
-                height: graph.height,
+                i: graph.id,
                 label: graph.label,
-
+                type: graph.type,
+                w: graph.width,
+                h: graph.height,
+                x: graph.layoutX,
+                y: graph.layoutY,
             })
         ));
         res.status(200).json(graphList);

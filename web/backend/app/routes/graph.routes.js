@@ -5,9 +5,10 @@ module.exports = app => {
     var router = require("express").Router();
 
     /**
+     * deprecated
      * Get all graphs of a specific dashboard 
      */
-    router.get("/:dashboardId", authService.autenticateToken, graphController.getDashboardGraphs);
+    //router.get("/:dashboardId", authService.autenticateToken, graphController.getDashboardGraphs);
 
     /**
      * Get specific graph 
