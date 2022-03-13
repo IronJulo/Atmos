@@ -4,12 +4,13 @@
     <v-row class="d-flex">
       <v-col
         v-for="graph in graphs"
-        :key="graph.order"
+        :key="graph.id"
         cols="12"
         sm="12"
         :md="graph.width"
       >
         <graph-card :graph="graph" />
+        
       </v-col>
     </v-row>
   </div>
@@ -17,6 +18,11 @@
 
 <script>
 export default {
+  head() {
+    return {
+      title: this.dashboard?.name || "dashboard"
+    }
+  },
   data: () => ({
     dashboard: null,
     graphs: [],
