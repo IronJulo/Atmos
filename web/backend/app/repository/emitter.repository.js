@@ -3,13 +3,13 @@ const Emitter = db.emitters;
 
 
 exports.findOneById = async (emitterId) => {
-    return await Emitter.findOne({ where: { id: emitterId } })
+    return await Emitter.findOne({ where: { id: emitterId } });
 };
 
-exports.findAllOfUser = async (userId) => {
-    return await Emitter.findAll({ where: { userId: userId } })
+exports.findAllByUser = async (user) => {
+    return await Emitter.findAll({ where: { userId: user.id } });
 };
 
-exports.create = async(emmiter) => {
-    return await Emitter.create(emmiter);
+exports.create = async (emitter) => {
+    return await Emitter.create(emitter);
 };

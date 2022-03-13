@@ -1,16 +1,18 @@
 const emitterService = require("../services/emitter.service");
 const errorService = require("../services/error.service");
-/**
- * Get all emitters of the user
- */
+
 exports.getUserEmitters = async (req, res, next) => {
     try {
         console.log("User requested his emitters!");
-        const emitters = await emitterService.findAllOfUser(req.user.id)
+        const emitters = await emitterService.findAllByUser(req.user)
 
         let emittersList = [];
         emitters.map(emitter => (
-            emittersList.push({ id: emitter.id, name: emitter.name, key: emitter.key })
+            emittersList.push({
+                id: emitter.id,
+                name: emitter.name,
+                key: emitter.key
+            })
         ));
         res.status(200).json(emittersList);
 
@@ -24,13 +26,14 @@ exports.getUserEmitters = async (req, res, next) => {
 exports.getEmitterById = async (req, res, next) => {
     try {
         console.log("User requested 1 emitter data!");
-        const emitter = await emitterService.findOneByIds(req.user.id, req.params.emitterId)
-
+        const emitter = await emitterService.findOneById(req.params.emitterId);
+        if (emitter.userId != req.user.id) {
+            throw new errorService.PermissionDeniedError();
+        }
         res.status(200).json({
             name: emitter.name,
             key: emitter.key
         });
-
     } catch (err) {
         next(err);
     }
@@ -42,11 +45,9 @@ exports.getEmitterById = async (req, res, next) => {
 exports.createEmitter = async (req, res, next) => {
     try {
         console.log("User requested to create a new emitter!");
-        
-        const { key, name } = req.body;
-        const emitter = await emitterService.create({ key, name, userId: req.user.id })
-        console.log(emitter);
 
+        const { key, name } = req.body; // TODO celebrate
+        const emitter = await emitterService.create({ key, name, userId: req.user.id })
         if (!emitter) {
             throw new errorService.UnableToCreateError();
         }

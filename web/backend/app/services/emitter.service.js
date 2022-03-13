@@ -1,22 +1,26 @@
 const EmitterRepository = require("../repository/emitter.repository");
 const errorService = require("./error.service");
 
-exports.findOneByIds = async (ownerId, emitterid) => {
-    const emitter = await EmitterRepository.findOneById(emitterid);
+exports.findAllByUser = async (user) => {
+    const emitters = await EmitterRepository.findAllByUser(user);
+    if (!emitters) {
+        throw new errorService.NotFoundError();
+    }
+    return emitters;
+};
 
+exports.findOneById = async (emitterId) => {
+    const emitter = await EmitterRepository.findOneById(emitterId);
     if (!emitter) {
         throw new errorService.NotFoundError();
     }
-    if (emitter.userId != ownerId) {
-        throw new errorService.PermissionDeniedError();
+    return emitter; 
+};
+
+exports.create = async (emitter) => {
+    const emitterInDB = await EmitterRepository.create(emitter);
+    if (!emitterInDB) {
+        throw new errorService.NotFoundError();
     }
-    return emitter;
-};
-
-exports.findAllOfUser = (userId) => {
-    return EmitterRepository.findAllOfUser(userId); //TODO async
-};
-
-exports.create = async (emmiter) => {
-    return await EmitterRepository.create(emmiter);
+    return emitterInDB;
 };
