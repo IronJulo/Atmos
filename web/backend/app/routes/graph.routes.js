@@ -5,34 +5,51 @@ module.exports = app => {
     var router = require("express").Router();
 
     /**
-     * Get graphs of a specific dashboard 
+     * Get all graphs of a specific dashboard 
      */
-    router.get("/graphs/:dashbaoardId", authService.autenticateToken, graphController.getDashboardGraphs);
+    router.get("/:dashboardId", authService.autenticateToken, graphController.getDashboardGraphs);
 
     /**
      * Get specific graph 
      */
-    router.get("/graphs/:graphId", authService.autenticateToken, graphController.getGraph);
+    router.get("/:graphId", authService.autenticateToken, graphController.getGraph);
+
+    /**
+     * Create a new graph
+     */
+    router.post("/new", authService.autenticateToken, graphController.create);
+
+    /**
+    * Create new specific graphs querry  
+    */
+    router.post("/:graphId/queries/new", authService.autenticateToken, graphController.createGraphQuery)
 
     /**
      * Get specific graphs querry  
      */
-    router.get("/graphs/:graphId/queries", authService.autenticateToken, graphController.getGraphQueries);
-    
+    router.get("/:graphId/queries", authService.autenticateToken, graphController.getGraphQueries);
+
     /**
+     * Edit specific graphs specific querry   eg: edit querry no 5 TODO delete the first parameter
+     */
+    router.put("/:graphId/queries/:queryId", authService.autenticateToken, graphController.updateGraphQueries)
+
+    /**
+     * DEPRECATED do not use !
      * Edit specific graphs querry  
      */
-     router.put("/graphs/:graphId/queries", authService.autenticateToken, graphController.updateGraphqueries)
-     
-    /**
-     * Get specific graphs data 
-     */
-    router.get("/graphs/:graphId/queries/data", authService.autenticateToken, graphController.getGraphData);
+    //router.put("/:graphId/queries", authService.autenticateToken, graphController.updateGraphQueries)
 
     /**
-     * Get specific graphs data by executing the querri in post body !! proceed with caution
+     * Get specific graphs data by executing the querry in database 
      */
-     router.post("/graphs/:graphId/data", authService.autenticateToken, graphController.getGraphData2);
+    router.get("/:graphId/data", authService.autenticateToken, graphController.getGraphData);
 
-    app.use('/', router);
+    /**
+     * DEPRECATED do not use !
+     * Get specific graphs data by executing the querry in post body !! proceed with caution
+     */
+    router.post("/:graphId/data", authService.autenticateToken, graphController.getGraphData2);
+
+    app.use('/graphs', router);
 }

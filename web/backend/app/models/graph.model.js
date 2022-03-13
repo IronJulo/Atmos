@@ -1,13 +1,16 @@
 module.exports = (sequelize, Sequelize) => {
     const Graph = sequelize.define("graph", {
-        order: {
+        label: {
+            type: Sequelize.STRING
+        },
+        type: { // TODO remove 
+            type: Sequelize.STRING
+        },
+        layoutX: {
             type: Sequelize.INTEGER
         },
-        type: {
-            type: Sequelize.STRING
-        },
-        unit: {
-            type: Sequelize.STRING
+        layoutY: {
+            type: Sequelize.INTEGER
         },
         width: {
             type: Sequelize.INTEGER
