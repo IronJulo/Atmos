@@ -17,13 +17,15 @@ db.dashboards = require("./dashboard.model.js")(sequelize, Sequelize);
 db.graphs = require("./graph.model.js")(sequelize, Sequelize);
 db.emitters = require("./emitter.model.js")(sequelize, Sequelize);
 db.collectors = require("./collector.model.js")(sequelize, Sequelize);
+db.queries = require("./query.model.js")(sequelize, Sequelize);
 
 db.users.hasMany(db.dashboards);
 db.users.hasMany(db.emitters);
 
 db.dashboards.hasMany(db.graphs);
-db.dashboards.hasMany(db.graphs);
 
 db.emitters.hasMany(db.collectors); 
+
+db.graphs.hasMany(db.queries);
  
 module.exports = db;
