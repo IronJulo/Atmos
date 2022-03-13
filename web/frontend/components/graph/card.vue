@@ -1,5 +1,10 @@
 <template>
-  <v-card :class="cardClasses" :loading="$fetchState.pending" outlined>
+  <v-card
+    height="100%"
+    :class="cardClasses"
+    :loading="$fetchState.pending"
+    outlined
+  >
     <v-hover>
       <template #default="{ hover }">
         <v-card-title>
@@ -20,12 +25,11 @@
       </template>
     </v-hover>
     <apexchart
-      :style="chartStyles"
-      :height="height"
+    class="pa-0 ma-0"
       width="100%"
+      :height="height"
       :options="chartOptions"
       :series="series"
-      class="mx-2"
     />
   </v-card>
 </template>
@@ -90,19 +94,17 @@ export default {
             enabled: true,
           },
         },
-
-        // yaxis: this.rawData.yaxis,
       }
     },
     height() {
-      return Math.max(100, this.graph.height * 100)
+      return `${65 + this.graph.h}%`
     },
     series() {
       return this.rawData.series
     },
     chartStyles() {
       return {
-        'max-height': `${this.height}px !important`,
+        'max-height': `10   % !important`,
       }
     },
   },
