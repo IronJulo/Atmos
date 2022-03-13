@@ -14,7 +14,14 @@ class UnknownEmitterError extends Error {
 
 class UnableToCreateError extends Error {
     constructor() {
-        super("Unable to create");
+        super("Unable to create ressource");
+        this.status = 500;
+    }
+};
+
+class UnableToUpdateError extends Error {
+    constructor() {
+        super("Unable to update ressource");
         this.status = 500;
     }
 };
@@ -33,10 +40,42 @@ class NotFoundError extends Error {
     }
 };
 
+class InvalidEmailOrPasswordError extends Error {
+    constructor() {
+        super("Wrong password or email");
+        this.status = 403;
+    }
+};
+
+class InvalidRefreshTokenError extends Error {
+    constructor() {
+        super("Refresh is invalid");
+        this.status = 403;
+    }
+};
+
+class InvalidTokenError extends Error {
+    constructor() {
+        super("Token is invalid");
+        this.status = 403;
+    }
+};
+
+class SequelizeConstraintError extends Error {
+    constructor(message, status) {
+        super(message);
+        this.status = status;
+    }
+};
+
 module.exports = {
-    UnknownUserError,
-    UnknownEmitterError,
-    UnableToCreateError,
+    InvalidEmailOrPasswordError,
+    SequelizeConstraintError,
+    InvalidRefreshTokenError,
     PermissionDeniedError,
-    NotFoundError
+    UnableToCreateError,
+    UnknownEmitterError,
+    InvalidTokenError,
+    UnknownUserError,
+    NotFoundError,
 };
