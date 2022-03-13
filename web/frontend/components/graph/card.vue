@@ -44,7 +44,7 @@ export default {
     },
   }),
   async fetch() {
-    this.rawData = await this.$axios.$get(`/api/data/${this.graph.id}`)
+    this.rawData = await this.$axios.$get(`/api/graphs/${this.graph.id}/data`)
   },
   computed: {
     cardClasses() {
@@ -60,17 +60,6 @@ export default {
         theme: {
           mode,
         },
-        grid: {},
-        chart: {
-          background,
-          type: this.graph.type,
-          toolbar: {
-            show: false,
-          },
-          zoom: {
-            enabled: false,
-          },
-        },
         stroke: {
           curve: 'smooth',
           width: 5,
@@ -78,24 +67,38 @@ export default {
         xaxis: {
           type: 'datetime',
         },
-        yaxis: {
-          labels: {
-            formatter: (value) => {
-              return value + this.graph.unit
+        chart: {
+          animations: {
+            enabled: true,
+            easing: 'easeinout',
+            speed: 800,
+            animateGradually: {
+              enabled: true,
+              delay: 150,
+            },
+            dynamicAnimation: {
+              enabled: true,
+              speed: 350,
             },
           },
+          stacked: false,
+          background,
+          toolbar: {
+            show: false,
+          },
+          zoom: {
+            enabled: true,
+          },
         },
+
+        // yaxis: this.rawData.yaxis,
       }
     },
     height() {
       return Math.max(100, this.graph.height * 100)
     },
     series() {
-      return [
-        {
-          data: this.rawData.data,
-        },
-      ]
+      return this.rawData.series
     },
     chartStyles() {
       return {

@@ -1,7 +1,5 @@
 <template>
   <v-navigation-drawer
-    :mini-variant.sync="drawer"
-    expand-on-hover
     permanent
     app
   >
