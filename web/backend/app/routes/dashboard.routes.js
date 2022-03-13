@@ -6,9 +6,10 @@ module.exports = app => {
     var router = require("express").Router();
 
     router.get("/", authService.autenticateToken, dashboardController.getUserDashboards);
+    router.get("/:dashboardId", authService.autenticateToken, dashboardController.getDashboardById);
     router.get("/:dashboardId/graphs", authService.autenticateToken, graphController.getDashboardGraphs);
     router.post("/new", authService.autenticateToken, dashboardController.createDashboard);
-    router.get("/:dashboardId", authService.autenticateToken, dashboardController.getDashboardById);
+    router.put("/:dashboardId/graphs-layouts", authService.autenticateToken, dashboardController.updateGraphsLayout);
     
     app.use('/dashboards', router);
 }

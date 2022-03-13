@@ -44,3 +44,23 @@ exports.createDashboard = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.updateGraphsLayout = async (req, res, next) => {
+    try {
+        console.log("User updated dashboard layout!");
+        const dashboard = await dashboardService.findOneById(req.params.dashboardId);
+        if (dashboard.userId != req.user.id) {
+            throw new errorService.PermissionDeniedError();
+        }
+
+        const changes = req.body.changes;
+
+        console.log(changes);
+        
+        
+        
+        res.sendStatus(501);
+    } catch (err) {
+        next(err);
+    }
+};
