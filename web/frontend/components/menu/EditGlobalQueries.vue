@@ -9,7 +9,7 @@
       :nudge-width="500"
       offset-x
       offset-y
-      class="pr-10"
+      
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn outlined primmary v-bind="attrs" v-on="on">
