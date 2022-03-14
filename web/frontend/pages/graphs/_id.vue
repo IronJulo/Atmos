@@ -17,6 +17,7 @@
       :editorMode="editorMode"
       :timeData="{ dateFrom, dateTo, hourFrom, hourTo }"
     />
+    <query-editor/>
   </div>
 </template>
 
