@@ -41,13 +41,13 @@ exports.getGraph = async (req, res, next) => {
         }
 
         res.status(200).json({
-            id: graph.id,
+            i: graph.id,
             label: graph.label,
             type: graph.type,
-            width: graph.width,
-            height: graph.height,
-            layoutX: graph.layoutX,
-            layoutY: graph.layoutY,
+            w: graph.width,
+            h: graph.height,
+            x: graph.layoutX,
+            y: graph.layoutY,
         });
     } catch (err) {
         next(err);
