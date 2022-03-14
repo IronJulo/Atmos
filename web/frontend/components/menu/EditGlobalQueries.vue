@@ -9,6 +9,7 @@
       :nudge-width="500"
       offset-x
       offset-y
+      class="pr-10"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn outlined primmary v-bind="attrs" v-on="on">
@@ -20,9 +21,35 @@
         <v-container>
           <v-row>
             <v-col cols="8">
-              <h4 class="pa-1">Absolute time range</h4>
-              <date-picker v-model="fromModel" />
-              <date-picker v-model="toModel" />
+              <v-row>
+                <v-col cols="5">
+                  <h4 class="pa-1">Absolute time range</h4>
+                  <date-picker
+                    v-model="dateFromModel"
+                    label="From"
+                    icon="mdi-calendar-outline"
+                  />
+                  <date-picker
+                    v-model="dateToModel"
+                    label="To"
+                    icon="mdi-calendar-outline"
+                  />
+                </v-col>
+                <v-col cols="5">
+                  <h4 class="pa-1">Absolute time range</h4>
+                  <time-picker
+                    v-model="hourFromModel"
+                    label="From"
+                    icon="mdi-clock-outline"
+                  />
+                  <time-picker
+                    v-model="hourToModel"
+                    label="To"
+                    icon="mdi-clock-outline"
+                  />
+                </v-col>
+                <v-col cols="2"> </v-col>
+              </v-row>
             </v-col>
             <v-divider vertical></v-divider>
             <v-col cols="4">
@@ -41,15 +68,21 @@
 export default {
   data: () => ({
     menu: false,
-    dateFrom: '',
-    dateTo: '',
   }),
   props: {
-    from: {
+    dateFrom: {
       type: String,
       required: true,
     },
-    to: {
+    dateTo: {
+      type: String,
+      required: true,
+    },
+    hourFrom: {
+      type: String,
+      required: true,
+    },
+    hourTo: {
       type: String,
       required: true,
     },
@@ -60,20 +93,36 @@ export default {
     },
   },
   computed: {
-    fromModel: {
+    dateFromModel: {
       get() {
-        return this.from
+        return this.dateFrom
       },
       set(value) {
-        this.$emit('update:from', value)
+        this.$emit('update:date-from', value)
       },
     },
-    toModel: {
+    dateToModel: {
       get() {
-        return this.to
+        return this.dateTo
       },
       set(value) {
-        this.$emit('update:to', value)
+        this.$emit('update:date-to', value)
+      },
+    },
+    hourFromModel: {
+      get() {
+        return this.hourFrom
+      },
+      set(value) {
+        this.$emit('update:hour-from', value)
+      },
+    },
+    hourToModel: {
+      get() {
+        return this.hourTo
+      },
+      set(value) {
+        this.$emit('update:hour-to', value)
       },
     },
   },

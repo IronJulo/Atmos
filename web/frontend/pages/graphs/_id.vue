@@ -7,43 +7,16 @@
       :hour-to.sync="hourTo"
       :label="pageName"
       :editor-mode.sync="editorMode"
+      :editable="false"
     />
     <navbar-side />
-    <grid-layout
-      :layout.sync="graphs"
-      :col-num="12"
-      :row-height="30"
-      :is-draggable="editorMode"
-      :is-resizable="editorMode"
-      :vertical-compact="true"
-      :use-css-transforms="true"
-      @layout-updated="layoutUpdatedEvent"
-    >
-      <grid-item
-        v-for="graph in graphs"
-        :minW="3"
-        :minH="6"
-        :maxH="30"
-        :key="graph.i"
-        :static="false"
-        :x="graph.x"
-        :y="graph.y"
-        :w="graph.w"
-        :h="graph.h"
-        :i="graph.i"
-        @resized="$refs[`chart${graph.i}`][0].reloadGraph()"
-      >
-        <graph-card
-          :ref="`chart${graph.i}`"
-          :graph="graph"
-          :editorMode="editorMode"
-          :timeData="{ dateFrom, dateTo, hourFrom, hourTo }"
-          fetchData="fetchGraphData"
-        />
-      </grid-item>
-    </grid-layout>
-    <h5>{{ dateFrom }} | {{ dateTo }}</h5>
-    <h5>{{ hourFrom }} | {{ hourTo }}</h5>
+    <graph-card
+      v-if="graph"
+      fixed-height="400vh"
+      :graph="graph"
+      :editorMode="editorMode"
+      :timeData="{ dateFrom, dateTo, hourFrom, hourTo }"
+    />
   </div>
 </template>
 
@@ -54,14 +27,14 @@ export default {
     dateTo: '',
     hourFrom: '',
     hourTo: '',
-    dashboard: null,
-    graphs: [],
     editorMode: false,
+    dashboard: null,
+    graph: null,
   }),
   async fetch() {
     this.dashboard = await this.$axios.$get(`api/dashboards/${this.id}`)
-    this.graphs = await this.$axios.$get(`api/dashboards/${this.id}/graphs`)
-    console.log(this.graphs)
+    this.graph = await this.$axios.$get(`api/graphs/${this.id}`)
+    console.log(this.graph)
   },
   head() {
     return {

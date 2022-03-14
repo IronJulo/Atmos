@@ -9,7 +9,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
-        v-model="date"
+        v-model="time"
         :label="label"
         :prepend-icon="icon"
         readonly
@@ -17,31 +17,34 @@
         v-on="on"
       ></v-text-field>
     </template>
-    <v-date-picker
-      v-model="date"
-      @input="
+    <v-time-picker
+      format="24hr"
+      v-model="time"
+      @change="
         menu = false
-        $refs.menu.save(date)
+        $refs.menu.save(time)
       "
     >
-    </v-date-picker>
+    </v-time-picker>
   </v-menu>
 </template>
 
 <script>
 export default {
   data: () => ({
-    date: '',
+    time: '',
     menu: false,
   }),
   props: {
-    label: {
+    value: {
       type: String,
+      required: true,
     },
     icon: {
       type: String,
+      required: true,
     },
-    value: {
+    label: {
       type: String,
       required: true,
     },

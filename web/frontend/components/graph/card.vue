@@ -12,7 +12,7 @@
           <template v-if="hover && rawData.series">
             <v-spacer />
             <v-btn v-if="editorMode" icon small class="mr-2">
-              <v-icon>mdi-resize</v-icon>
+              <v-icon>mdi-database-search-outline</v-icon>
             </v-btn>
             <v-btn v-if="editorMode" icon small @click="deleteGraph">
               <v-icon>mdi-delete-forever-outline</v-icon>
@@ -25,12 +25,13 @@
       </template>
     </v-hover>
     <apexchart
+      ref="main"
       v-if="rawData.series"
       :id="chartId"
       class="pr-2"
       width="100%"
       max-width="100%"
-      :height="height"
+      :height="fixedHeight || height"
       :max-height="height"
       :options="chartOptions"
       :series="series"
@@ -61,6 +62,13 @@ export default {
       type: Boolean,
       required: true,
     },
+    timeData: {
+      type: Object,
+      required: true,
+    },
+    fixedHeight: {
+      type: String,
+    },
   },
   data: () => ({
     rawData: {
@@ -68,11 +76,30 @@ export default {
     },
   }),
   async fetch() {
-    this.rawData = await this.$axios.$get(`/api/graphs/${this.graph.i}/data`)
+    const timestampFrom =
+      Date.parse(this.timeData.dateFrom + 'T' + this.timeData.hourFrom) ||
+      Date.now() - 432000000
+    const timestampTo =
+      Date.parse(this.timeData.dateTo + 'T' + this.timeData.hourTo) ||
+      Date.now().toString()
+
+    console.log(timestampFrom)
+    console.log(timestampTo)
+    this.rawData = await this.$axios.$get(`/api/graphs/${this.graph.i}/data`, {
+      params: {
+        from: timestampFrom,
+        to: timestampTo,
+      },
+    })
   },
   methods: {
-    render() {
-      this.chart.render()
+    deleteGraph() {
+      console.log('delete')
+    },
+    reloadGraph() {
+      setTimeout(() => {
+        this.$refs.main.refresh()
+      }, 1000)
     },
   },
   computed: {
@@ -126,7 +153,7 @@ export default {
       }
     },
     height() {
-      return `${65 + this.graph.h}%`
+      return `${63 + this.graph.h}%`
     },
     series() {
       return this.rawData.series
