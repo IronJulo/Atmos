@@ -21,34 +21,34 @@ module.exports = app => {
     router.post("/new", authService.autenticateToken, graphController.create);
 
     /**
-    * Create new specific graphs querry  
+    * Create new specific graphs query  
     */
     router.post("/:graphId/queries/new", authService.autenticateToken, graphController.createGraphQuery)
 
     /**
-     * Get specific graphs querry  
+     * Get specific graphs query  
      */
     router.get("/:graphId/queries", authService.autenticateToken, graphController.getGraphQueries);
 
     /**
-     * Edit specific graphs specific querry   eg: edit querry no 5 TODO delete the first parameter
+     * Edit specific graphs specific query   eg: edit query no 5 TODO delete the first parameter
      */
     router.put("/:graphId/queries/:queryId", authService.autenticateToken, graphController.updateGraphQueries)
 
     /**
      * DEPRECATED do not use !
-     * Edit specific graphs querry  
+     * Edit specific graphs query  
      */
     //router.put("/:graphId/queries", authService.autenticateToken, graphController.updateGraphQueries)
 
     /**
-     * Get specific graphs data by executing the querry in database 
+     * Get specific graphs data by executing the query in database 
      */
     router.get("/:graphId/data", authService.autenticateToken, graphController.getGraphData);
 
     /**
      * DEPRECATED do not use !
-     * Get specific graphs data by executing the querry in post body !! proceed with caution
+     * Get specific graphs data by executing the query in post body !! proceed with caution
      */
     router.post("/:graphId/data", authService.autenticateToken, graphController.getGraphData2);
 

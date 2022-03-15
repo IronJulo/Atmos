@@ -130,8 +130,10 @@ exports.getGraphData2 = async (req, res, next) => {
 
 exports.updateGraphQueries = async (req, res, next) => {
     try {
-        console.log("user requested the creation of a graph query!")
+        console.log("user requested the edit of a graph query!")
         const { emitterId, measurement, unit, type, alias, grouping } = req.body; // TODO celebrate
+        console.log({ emitterId, measurement, unit, type, alias, grouping })
+
         const query = await queryService.findOneById(req.params.queryId);
         const graph = await graphService.findOneById(query.graphId);
         const dashboard = await dashboardService.findOneById(graph.dashboardId);
