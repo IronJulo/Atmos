@@ -17,7 +17,14 @@
       :editorMode="editorMode"
       :timeData="{ dateFrom, dateTo, hourFrom, hourTo }"
     />
-    <query-editor/>
+    <v-expansion-panels
+      popout
+      class="px-10 mt-2"
+      v-for="query in queries"
+      :key="query.id"
+    >
+      <query-editor :query="query" :graphId="graph.i" />
+    </v-expansion-panels>
   </div>
 </template>
 
@@ -29,13 +36,13 @@ export default {
     hourFrom: '',
     hourTo: '',
     editorMode: false,
-    dashboard: null,
     graph: null,
+    queries: [],
   }),
   async fetch() {
-    this.dashboard = await this.$axios.$get(`api/dashboards/${this.id}`)
     this.graph = await this.$axios.$get(`api/graphs/${this.id}`)
-    console.log(this.graph)
+    this.queries = await this.$axios.$get(`api/graphs/${this.id}/queries`)
+    console.log(this.queries)
   },
   head() {
     return {

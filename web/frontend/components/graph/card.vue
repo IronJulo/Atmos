@@ -11,7 +11,7 @@
           {{ graph.label }}
           <template v-if="hover && rawData.series">
             <v-spacer />
-            <v-btn v-if="editorMode" icon small class="mr-2">
+            <v-btn v-if="editorMode" icon small class="mr-2" :to="`/graphs/${graph.i}/`">
               <v-icon>mdi-database-search-outline</v-icon>
             </v-btn>
             <v-btn v-if="editorMode" icon small @click="deleteGraph">
@@ -121,7 +121,6 @@ export default {
         },
         stroke: {
           curve: 'smooth',
-          width: 5,
         },
         xaxis: {
           type: 'datetime',
@@ -144,10 +143,7 @@ export default {
           stacked: false,
           background,
           toolbar: {
-            show: false,
-          },
-          zoom: {
-            enabled: true,
+            show: true,
           },
         },
       }
