@@ -1,8 +1,5 @@
 <template>
-  <v-navigation-drawer
-    permanent
-    app
-  >
+  <v-navigation-drawer permanent app>
     <v-list-item class="px-2">
       <v-list-item-avatar>
         <v-img :src="require(`~/assets/images/maka.png`)"></v-img>
@@ -20,6 +17,7 @@
           </v-list-item-content>
         </template>
 
+        <menu-add-device @device-created="$fetch" />
         <v-list-item
           v-for="device in devices"
           :key="device.id"
@@ -44,6 +42,7 @@
             <v-list-item-title>Dashboards</v-list-item-title>
           </v-list-item-content>
         </template>
+        <menu-add-dashboard @dashboard-created="$fetch" />
 
         <v-list-item
           v-for="dashboard in dashboards"
@@ -102,7 +101,8 @@ export default {
     toDashboard(dashboard) {
       return `/dashboards/${dashboard.id}`
     },
-    toggleTheme() { // Use storage to store the theme
+    toggleTheme() {
+      // Use storage to store the theme
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
     },
   },
