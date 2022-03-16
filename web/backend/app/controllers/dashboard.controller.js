@@ -1,4 +1,6 @@
 const dashboardService = require("../services/dashboard.service");
+const graphService = require("../services/graph.service");
+
 const errorService = require("../services/error.service");
 
 exports.getUserDashboards = async (req, res, next) => {
@@ -48,18 +50,21 @@ exports.createDashboard = async (req, res, next) => {
 exports.updateGraphsLayout = async (req, res, next) => {
     try {
         console.log("User updated dashboard layout!");
-        const dashboard = await dashboardService.findOneById(req.params.dashboardId);
-        if (dashboard.userId != req.user.id) {
-            throw new errorService.PermissionDeniedError();
-        }
 
         const changes = req.body.changes;
 
+        await changes.forEach(async change => {
+            const graph = await graphService.findOneById(change.id);
+            const dashboard = await dashboardService.findOneById(graph.dashboardId);
+            if (dashboard.userId != req.user.id) {
+                throw new errorService.PermissionDeniedError();
+            }
+            const { id, height, width, x, y } = change
+            console.log({ id, height, width, x, y })
+            await graphService.updateGraphsLayout({ height, width, layoutX: x, layoutY: y }, id);
+        });
         console.log(changes);
-        
-        
-        
-        res.sendStatus(501);
+        res.sendStatus(200);
     } catch (err) {
         next(err);
     }

@@ -185,7 +185,7 @@ exports.deleteGraphQuery = async (req, res, next) => {
         console.log("User requested the deletion of a graph query!")
 
         const { queryId } = req.params; // TODO celebrate
-        
+
         const query = await queryService.findOneById(queryId);
         const graph = await graphService.findOneById(query.graphId);
         const dashboard = await dashboardService.findOneById(graph.dashboardId);
@@ -193,8 +193,6 @@ exports.deleteGraphQuery = async (req, res, next) => {
         if (dashboard.userId = !req.user.id) {
             throw new errorService.PermissionDeniedError();
         }
-        console.log("User requested the deletion of a graph query!")
-
 
         await queryService.delete(query);
         res.sendStatus(200)
@@ -207,13 +205,14 @@ exports.create = async (req, res, next) => {
     try {
         console.log("user requested the creation of a graph!");
 
-        const { type, width, height, dashboardId, label, layoutX, layoutY } = req.body; //TODO celebrate
+        const { dashboardId } = req.body; //TODO celebrate
         const dashboard = await dashboardService.findOneById(dashboardId)
 
         if (dashboard.userId != req.user.id) {
             throw new errorService.PermissionDeniedError();
         }
-        await graphService.create({ type, dashboardId, label, width, height, layoutX, layoutY });
+        
+        await graphService.create({ dashboardId, label: "New graph", width: 3, height: 6, layoutX: 0, layoutY: 0 });
 
         res.sendStatus(200);
     } catch (err) {

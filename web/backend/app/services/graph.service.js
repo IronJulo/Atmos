@@ -20,6 +20,14 @@ exports.findOneById = async (graphId) => {
     return graphInDB;
 };
 
+exports.updateGraphsLayout = async (graph, graphId) => {
+    const graphInDB = await graphRepository.update(graph, graphId);
+    if (!graphInDB) {
+        throw new errorService.UnableToCreateError();
+    }
+    return graphInDB;
+};
+
 exports.create = async (graph) => {
     const graphInDB = await graphRepository.create(graph);
     if (!graphInDB) {
