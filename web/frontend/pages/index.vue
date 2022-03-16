@@ -1,20 +1,43 @@
 <template>
-  <div>
-    <h1>Index of Atmos</h1>
-    <h1 v-if="$auth.loggedIn">{{ $auth.user.name }}</h1>
-    <h1 v-if="$auth.loggedIn">{{ $auth.user.email }}</h1>
-    <v-btn to="/logout"> Logout </v-btn>
-    <v-btn to="/register"> Register </v-btn>
-    <v-btn to="/login"> Login </v-btn>
-    <v-btn to="/dashboards"> Dashboards </v-btn>
-    <v-img
-      contain
-      :src="require(`~/assets/images/Atmos_logo.png`)"
-      :aspect-ratio="16 / 9"
-      class="subheading pt-4"
-      height="10vh"
-    ></v-img>
-  </div>
+  <v-parallax height="1200" src="https://wallpaperaccess.com/full/1369012.jpg">
+    <v-card
+      elevation="3"
+      outlined
+      shaped
+      tile
+      class="d-flex justify-space-between pa-0 ma-10 flex-grow-1"
+      max-height="50px"
+    >
+      <div class="d-flex align-center ml-1"> 
+        <v-img
+          :src="require(`~/assets/images/Atmos_logo.png`)"
+          height="40px"
+          width="40px"
+        />
+        Atmos
+      </div>
+      <div v-if="!$auth.user" class="d-flex align-center">
+        <v-btn class="pa-2 ma-2" color="primary" to="/register">
+          Register
+        </v-btn>
+        <v-btn class="pa-2 ma-2" color="primary" to="/login"> Login </v-btn>
+      </div>
+      <div v-else class="d-flex align-center">
+        <v-btn class="pa-2 ma-2" color="primary" to="/dashboards">
+          Open dashboards
+        </v-btn>
+        <v-btn class="pa-2 ma-2" color="primary" to="/logout"> Logout </v-btn>
+      </div>
+    </v-card>
+    <v-row align="top" justify="center">
+      <v-col class="text-center">
+        <h1>toto</h1>
+      </v-col>
+      <v-col class="text-center">
+        <h1>toto</h1>
+      </v-col>
+    </v-row>
+  </v-parallax>
 </template>
 
 <script>
@@ -28,3 +51,12 @@ export default {
   },
 }
 </script>
+<style lang="css">
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 0px;
+}
+</style>

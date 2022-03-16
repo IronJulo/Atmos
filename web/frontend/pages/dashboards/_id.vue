@@ -77,9 +77,10 @@ export default {
   },
   methods: {
     async addGraph() {
-      await this.$axios.$post(`api/graphs/new`, { dashboardId: this.$route.params.id })
+      await this.$axios.$post(`api/graphs/new`, {
+        dashboardId: this.$route.params.id,
+      })
       this.graphs = await this.$axios.$get(`api/dashboards/${this.id}/graphs`)
-
     },
     layoutUpdatedEvent(newLayout) {
       console.log('Updated layout: ', newLayout)
@@ -108,5 +109,12 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style lang="css">
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 0px;
+}
 </style>
