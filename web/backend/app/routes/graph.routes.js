@@ -24,7 +24,12 @@ module.exports = app => {
     * Create new specific graphs query  
     */
     router.post("/:graphId/queries/new", authService.autenticateToken, graphController.createGraphQuery)
-
+    
+    /**
+    * Delete specific graphs query  
+    */
+    router.delete("/:graphId/queries/:queryId", authService.autenticateToken, graphController.deleteGraphQuery)
+    
     /**
      * Get specific graphs query  
      */

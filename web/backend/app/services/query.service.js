@@ -32,3 +32,7 @@ exports.update = async (query, queryId) => {
     }
     return queryInDB;
 };
+
+exports.delete = async (query) => {
+    await queryRepository.delete(query);
+};

@@ -64,8 +64,6 @@ exports.getGraphQueries = async (req, res, next) => {
         }
 
         const queries = await queryService.findAllByGraph(graph);
-        console.log("queries");
-        console.log(queries);
         let queryList = [];
         queries.map(query => (
             queryList.push({
@@ -115,7 +113,6 @@ exports.getGraphData = async (req, res, next) => {
             ]
         };
 
-        console.log(result);
         res.status(200).json(result);
     } catch (err) {
         next(err);
@@ -132,7 +129,6 @@ exports.updateGraphQueries = async (req, res, next) => {
     try {
         console.log("user requested the edit of a graph query!")
         const { emitterId, measurement, unit, type, alias, grouping } = req.body; // TODO celebrate
-        console.log({ emitterId, measurement, unit, type, alias, grouping })
 
         const query = await queryService.findOneById(req.params.queryId);
         const graph = await graphService.findOneById(query.graphId);
@@ -152,15 +148,56 @@ exports.updateGraphQueries = async (req, res, next) => {
 exports.createGraphQuery = async (req, res, next) => {
     try {
         console.log("user requested the creation of a graph query!")
-        const { emitterId, measurement, unit, type, alias, grouping, graphId } = req.body; // TODO celebrate
+        /*const { emitterId, measurement, unit, type, alias, grouping, graphId } = req.body; // TODO celebrate
         const emitter = await emitterService.findOneById(emitterId);
 
         if (emitter.userId != req.user.id) {
             throw new errorService.PermissionDeniedError();
+        }*/
+        const { graphId } = req.params; // TODO celebrate
+        console.log("graphId");
+        console.log(graphId);
+
+        const graph = await graphService.findOneById(graphId);
+        const dashboard = await dashboardService.findOneById(graph.dashboardId);
+
+        if (dashboard.userId = !req.user.id) {
+            throw new errorService.PermissionDeniedError();
         }
 
-        await queryService.create({ emitterId, measurement, unit, type, alias, grouping, graphId });
-        res.sendStatus(200);
+        const query = await queryService.create({ alias: "Query", graphId });
+        res.status(200).json({
+            id: query.id,
+            emitterId: query.emitterId,
+            measurement: query.measurement,
+            unit: query.unit,
+            type: query.type,
+            alias: query.alias,
+            grouping: query.grouping,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.deleteGraphQuery = async (req, res, next) => {
+    try {
+        console.log("User requested the deletion of a graph query!")
+
+        const { queryId } = req.params; // TODO celebrate
+        
+        const query = await queryService.findOneById(queryId);
+        const graph = await graphService.findOneById(query.graphId);
+        const dashboard = await dashboardService.findOneById(graph.dashboardId);
+
+        if (dashboard.userId = !req.user.id) {
+            throw new errorService.PermissionDeniedError();
+        }
+        console.log("User requested the deletion of a graph query!")
+
+
+        await queryService.delete(query);
+        res.sendStatus(200)
     } catch (err) {
         next(err);
     }
@@ -168,9 +205,9 @@ exports.createGraphQuery = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
     try {
-        console.log("user requested the creation of a graph!")
+        console.log("user requested the creation of a graph!");
 
-        const { type, width, height, dashboardId, label, layoutX, layoutY} = req.body; //TODO celebrate
+        const { type, width, height, dashboardId, label, layoutX, layoutY } = req.body; //TODO celebrate
         const dashboard = await dashboardService.findOneById(dashboardId)
 
         if (dashboard.userId != req.user.id) {
