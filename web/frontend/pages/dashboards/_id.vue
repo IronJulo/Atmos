@@ -42,8 +42,15 @@
         />
       </grid-item>
     </grid-layout>
-    <h5>{{ dateFrom }} | {{ dateTo }}</h5>
-    <h5>{{ hourFrom }} | {{ hourTo }}</h5>
+    <v-btn
+      v-if="editorMode"
+      class="ml-2 mb-2 mt-0"
+      color="primary"
+      @click="addGraph"
+    >
+      <v-icon class="pr-0 ma-1">mdi-plus</v-icon>
+      Add graph
+    </v-btn>
   </div>
 </template>
 
@@ -69,6 +76,11 @@ export default {
     }
   },
   methods: {
+    async addGraph() {
+      await this.$axios.$post(`api/graphs/new`, { dashboardId: this.$route.params.id })
+      this.graphs = await this.$axios.$get(`api/dashboards/${this.id}/graphs`)
+
+    },
     layoutUpdatedEvent(newLayout) {
       console.log('Updated layout: ', newLayout)
 

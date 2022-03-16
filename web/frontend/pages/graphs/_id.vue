@@ -89,7 +89,7 @@ export default {
   },
   computed: {
     pageName() {
-      return this.dashboard?.name || 'dashboard'
+      return `graph#${this.id}`
     },
     id() {
       return this.$route.params.id
