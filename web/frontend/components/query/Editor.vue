@@ -22,13 +22,15 @@
           tile
           class="mr-2 px-5 py-2 flex-grow-1"
         >
-          <!-- TODO select emitername -> emitterid -->
-          <v-text-field
+          <v-select
             v-model="queryObject.emitterId"
             hide-details="auto"
             class="ma-0 pa-0"
+            :items="this.emitters"
+            item-value="id"
+            item-text="name"
             dense
-          ></v-text-field>
+          ></v-select>
         </v-card>
       </v-row>
       <v-row class="ma-1" justify="center">
@@ -75,12 +77,13 @@
           tile
           class="mr-2 px-5 py-2 flex-grow-1"
         >
-          <v-text-field
+          <v-select
             v-model="queryObject.grouping"
             hide-details="auto"
             class="ma-0 pa-0"
+            :items="['1s', '1m', '1h', '1d', '1w', '1m', '1y']"
             dense
-          ></v-text-field>
+          ></v-select>
         </v-card>
       </v-row>
       <v-row class="ma-1" justify="center">
@@ -127,13 +130,13 @@
           tile
           class="mr-2 px-5 py-2 flex-grow-1"
         >
-          <!-- TODO select emitername -> emitterid -->
-          <v-text-field
+          <v-select
             v-model="queryObject.type"
             hide-details="auto"
             class="ma-0 pa-0"
+            :items="['line', 'bar']"
             dense
-          ></v-text-field>
+          ></v-select>
         </v-card>
       </v-row>
       <v-row class="ma-1" justify="center">
@@ -162,9 +165,16 @@
           ></v-text-field>
         </v-card>
       </v-row>
-      <v-btn class="mt-2 mx-1 py-2" primary @click="saveQuery"
-        >Save query</v-btn
-      >
+      <div class="d-flex justify-space-between">
+        <v-btn class="pa-1 pl-3 pr-3 mt-5" color="primary" @click="saveQuery">
+          <v-icon class="pr-0 mr-1">mdi-content-save-outline</v-icon>
+          Save query
+        </v-btn>
+        <v-btn class="pa-1 pr-3 mt-5" color="error" @click="deleteQuery">
+          <v-icon class="pr-0 ma-1">mdi-minus</v-icon>
+          Delete query
+        </v-btn>
+      </div>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -195,18 +205,17 @@ export default {
     saveQuery() {
       this.$axios.$put(
         `api/graphs/${this.graphId}/queries/${this.queryObject.id}`,
-        {
-          emitterId: this.queryObject.emitterId,
-          measurement: this.queryObject.measurement,
-          unit: this.queryObject.unit,
-          type: this.queryObject.type,
-          alias: this.queryObject.alias,
-          grouping: this.queryObject.grouping,
-        }
-      );
-      // TODO await + handle errors
-
-      console.log(this.queryObject)
+        this.queryObject
+      )
+      // TODO await + handle errors + notif + loading
+    },
+    deleteQuery() {
+      this.$axios.$delete(
+        `api/graphs/${this.graphId}/queries/${this.queryObject.id}`,
+        this.queryObject
+      )
+      this.$emit('deleted-query', this.queryObject)
+      // TODO await + handle errors + notif + loading
     },
   },
   computed: {},
@@ -217,6 +226,10 @@ export default {
     },
     graphId: {
       type: Number,
+      required: true,
+    },
+    emitters: {
+      type: Array,
       required: true,
     },
   },
