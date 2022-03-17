@@ -149,12 +149,7 @@ exports.updateGraphQueries = async (req, res, next) => {
 exports.createGraphQuery = async (req, res, next) => {
     try {
         console.log("user requested the creation of a graph query!")
-        /*const { emitterId, measurement, unit, type, alias, grouping, graphId } = req.body; // TODO celebrate
-        const emitter = await emitterService.findOneById(emitterId);
 
-        if (emitter.userId != req.user.id) {
-            throw new errorService.PermissionDeniedError();
-        }*/
         const { graphId } = req.params; // TODO celebrate
         console.log("graphId");
         console.log(graphId);
@@ -213,7 +208,7 @@ exports.create = async (req, res, next) => {
             throw new errorService.PermissionDeniedError();
         }
         
-        await graphService.create({ dashboardId, label: "New graph", width: 3, height: 6, layoutX: 0, layoutY: 0 });
+        await graphService.create({ dashboardId, label: "New graph", width: 3, height: 6, layoutX: 0, layoutY: 100 });
 
         res.sendStatus(200);
     } catch (err) {

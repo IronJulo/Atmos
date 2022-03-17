@@ -1,5 +1,5 @@
 <template>
-  <v-parallax height="1200" src="https://wallpaperaccess.com/full/1369012.jpg">
+  <v-parallax src="https://wallpaperaccess.com/full/1369012.jpg">
     <v-card
       elevation="3"
       outlined
@@ -10,11 +10,12 @@
     >
       <div class="d-flex align-center ml-1"> 
         <v-img
+        class="pl-2"
           :src="require(`~/assets/images/Atmos_logo.png`)"
-          height="40px"
-          width="40px"
+          height="35px"
+          width="35px"
         />
-        Atmos
+        <h2 class="pl-2">Atmos</h2>
       </div>
       <div v-if="!$auth.user" class="d-flex align-center">
         <v-btn class="pa-2 ma-2" color="primary" to="/register">
