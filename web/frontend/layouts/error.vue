@@ -1,5 +1,12 @@
 <template>
   <v-app dark>
+    <v-img
+      contain
+      :src="require(`~/assets/images/mr-incredible-mr-incredible-uncanny.gif`)"
+      :aspect-ratio="16 / 9"
+      class="subheading pt-4"
+      height="10vh"
+    ></v-img>
     <h1 v-if="error.statusCode === 404">
       {{ pageNotFound }}
     </h1>

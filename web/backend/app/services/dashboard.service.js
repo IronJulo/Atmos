@@ -1,29 +1,26 @@
-const DashboardRepository = require("../repository/dashboard.repository");
+const dashboardRepository = require("../repository/dashboard.repository");
 const errorService = require("./error.service");
 
-exports.findOneByIds = async (ownerId, dashboardId) => {
-    const dashboard = await DashboardRepository.findOneById(dashboardId);
-
-    console.log("dashboard");
-    console.log(dashboard);
-
-    if (!dashboard) {
+exports.findAllByUser = async (user) => {
+    const dashboards =  await dashboardRepository.findAllByUser(user);
+    if (!dashboards) {
         throw new errorService.NotFoundError();
     }
-    if (dashboard.userId != ownerId) {
-        throw new errorService.PermissionDeniedError();
+    return dashboards;
+};
+
+exports.findOneById = async (dashboardId) => {
+    const dashboard = await dashboardRepository.findOneById(dashboardId);
+    if (!dashboard) {
+        throw new errorService.NotFoundError();
     }
     return dashboard;
 };
 
-exports.findAllOfUser = (id) => {
-    return DashboardRepository.findAllOfUser(id);
-};
-
-exports.create = async ({ name, userId }) => {
-    try {
-        await DashboardRepository.create({ name, userId });
-    } catch (err) {
-        //TODO
+exports.create = async (dashboard) => {
+    const dashboardInDB = await dashboardRepository.create(dashboard);
+    if (!dashboardInDB) {
+        throw new errorService.UnableToCreateError();
     }
+    return dashboardInDB;
 };
