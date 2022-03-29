@@ -1,7 +1,7 @@
 const env = require("./app/config/env.config.js");
 const express = require("express");
 const app = express();
-const db = require("./app/models");
+const {db} = require("./app/models");
 db.sequelize.sync();
 
 const cors = require("cors");

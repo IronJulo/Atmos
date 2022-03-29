@@ -1,5 +1,6 @@
 const dbConfig = require("../config/db.config.js");
 const { Sequelize, Model, DataTypes } = require('sequelize');
+const { InfluxDB } = require("influx");
 const db = {};
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -8,6 +9,15 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     dialectOptions: {},
     logging: false,
 });
+
+const influxClient = new InfluxDB({
+    database: dbConfig.INFLUX_DATA_BASE,
+    host: dbConfig.HOST,
+    port: dbConfig.INFLUX_PORT,
+    username: dbConfig.INFLUX_USER,
+    password: dbConfig.INFLUX_PASSWORD,
+})
+
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
@@ -28,4 +38,7 @@ db.emitters.hasMany(db.collectors);
 
 db.graphs.hasMany(db.queries);
  
-module.exports = db;
+module.exports = {
+    db,
+    influxClient
+};

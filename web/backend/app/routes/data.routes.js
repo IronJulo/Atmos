@@ -4,9 +4,6 @@ module.exports = app => {
 
     var router = require("express").Router();
     
-    /**
-    * Deprecated 
-    */
-    router.get("/data/", authService.autenticateToken, graphDataController.getData);
-    app.use('/', router);
+    router.post("/", /* todo token */ graphDataController.saveData);
+    app.use('/data', router);
 }

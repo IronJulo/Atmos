@@ -85,12 +85,15 @@ export default {
 
     console.log(timestampFrom)
     console.log(timestampTo)
+
     this.rawData = await this.$axios.$get(`/api/graphs/${this.graph.i}/data`, {
       params: {
         from: timestampFrom,
         to: timestampTo,
       },
     })
+    console.log("this.rawData");
+    console.log(this.rawData);
   },
   methods: {
     deleteGraph() {
@@ -156,7 +159,7 @@ export default {
     },
     chartStyles() {
       return {
-        'max-height': `10   % !important`,
+        'max-height': `10 % !important`,
       }
     },
   },

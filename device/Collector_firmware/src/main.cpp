@@ -36,9 +36,9 @@
 #define DHTTYPE DHT11
 
 const char *SSID = "Livebox-4FC0";
-const char *PASSWORD = "wUt3QS5JZqdxGnxJKd";
+const char *PASSWORD = "pas le vrais mot de pass ";
 const char *API_URL = "http://192.168.1.36:3005/";
-const char *COLLECTOR_KEY = "67addd4a-a827";
+const char *COLLECTOR_KEY = "67addd4a-a827"; //TODO COLLECTOR id
 
 unsigned long get_data_timer = 0;
 
@@ -91,7 +91,7 @@ void send_to_API(int co2, int air_quality, float humidity, float temperature, ui
     HTTPClient http;
     http.begin(client, API_URL);
     http.addHeader("Content-Type", "application/json");
-    snprintf(json, sizeof(json), "{ \"collector_key\": \"%s\", \"co2\": \"%d\", \"air_quality\": \"%d\", \"humidity\": \"%f\", \"temperature\": \"%f\",  \"pm1_0\": \"%d\", \"pm2_5\": \"%d\", \"pm10_0\": %d }", COLLECTOR_KEY, co2, air_quality, humidity, temperature, pm1_0, pm2_5, pm10_0);
+    snprintf(json, sizeof(json), "{ \"collectorId\": \"%s\", \"co2\": \"%d\", \"air_quality\": \"%d\", \"humidity\": \"%f\", \"temperature\": \"%f\",  \"pm1_0\": \"%d\", \"pm2_5\": \"%d\", \"pm10_0\": %d }", COLLECTOR_KEY, co2, air_quality, humidity, temperature, pm1_0, pm2_5, pm10_0);
     Serial.println(json);
     int httpResponseCode = http.POST(json);
     Serial.println(httpResponseCode);
