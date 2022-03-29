@@ -1,16 +1,21 @@
 <template>
-  <v-card :class="cardClasses" :loading="$fetchState.pending" outlined>
+  <v-card
+    height="100%"
+    :class="cardClasses"
+    :loading="$fetchState.pending"
+    outlined
+  >
     <v-hover>
       <template #default="{ hover }">
         <v-card-title>
           {{ graph.label }}
-          <template v-if="hover">
+          <template v-if="hover && rawData.series">
             <v-spacer />
-            <v-btn icon small class="mr-2">
-              <v-icon>mdi-resize</v-icon>
+            <v-btn v-if="editorMode" icon small class="mr-2" :to="`/graphs/${graph.i}/`">
+              <v-icon>mdi-database-search-outline</v-icon>
             </v-btn>
-            <v-btn icon small class="mr-2">
-              <v-icon>mdi-cog</v-icon>
+            <v-btn v-if="editorMode" icon small @click="deleteGraph">
+              <v-icon>mdi-delete-forever-outline</v-icon>
             </v-btn>
             <v-btn icon small :loading="$fetchState.pending" @click="$fetch">
               <v-icon>mdi-refresh</v-icon>
@@ -20,13 +25,29 @@
       </template>
     </v-hover>
     <apexchart
-      :style="chartStyles"
-      :height="height"
+      ref="main"
+      v-if="rawData.series"
+      :id="chartId"
+      class="pr-2"
       width="100%"
+      max-width="100%"
+      :height="fixedHeight || height"
+      :max-height="height"
       :options="chartOptions"
       :series="series"
-      class="mx-2"
     />
+    <div v-else>
+      <v-card-title class="text-xs-center">
+        <h5>Error graph data not found</h5>
+      </v-card-title>
+      <v-layout justify-center>
+        <v-card-actions>
+          <v-btn primary @click="$fetch">
+            <span>Reload</span>
+          </v-btn>
+        </v-card-actions>
+      </v-layout>
+    </div>
   </v-card>
 </template>
 
@@ -37,6 +58,17 @@ export default {
       type: Object,
       required: true,
     },
+    editorMode: {
+      type: Boolean,
+      required: true,
+    },
+    timeData: {
+      type: Object,
+      required: true,
+    },
+    fixedHeight: {
+      type: String,
+    },
   },
   data: () => ({
     rawData: {
@@ -44,9 +76,39 @@ export default {
     },
   }),
   async fetch() {
-    this.rawData = await this.$axios.$get(`/api/graph-data/${this.graph.id}`)
+    const timestampFrom =
+      Date.parse(this.timeData.dateFrom + 'T' + this.timeData.hourFrom) ||
+      Date.now() - 432000000
+    const timestampTo =
+      Date.parse(this.timeData.dateTo + 'T' + this.timeData.hourTo) ||
+      Date.now().toString()
+
+    console.log(timestampFrom)
+    console.log(timestampTo)
+
+    this.rawData = await this.$axios.$get(`/api/graphs/${this.graph.i}/data`, {
+      params: {
+        from: timestampFrom,
+        to: timestampTo,
+      },
+    })
+    console.log("this.rawData");
+    console.log(this.rawData);
+  },
+  methods: {
+    deleteGraph() {
+      console.log('delete')
+    },
+    reloadGraph() {
+      setTimeout(() => {
+        this.$refs.main.refresh()
+      }, 1000)
+    },
   },
   computed: {
+    chartId() {
+      return `chart${this.graph.i}`
+    },
     cardClasses() {
       return {
         'fill-height': this.fullHeight,
@@ -60,46 +122,44 @@ export default {
         theme: {
           mode,
         },
-        grid: {},
-        chart: {
-          background,
-          type: this.graph.type,
-          toolbar: {
-            show: false,
-          },
-          zoom: {
-            enabled: false,
-          },
-        },
         stroke: {
           curve: 'smooth',
-          width: 5,
         },
         xaxis: {
           type: 'datetime',
         },
-        yaxis: {
-          labels: {
-            formatter: (value) => {
-              return value + this.graph.unit
+        chart: {
+          redrawOnParentResize: true,
+          animations: {
+            enabled: true,
+            easing: 'easeinout',
+            speed: 800,
+            animateGradually: {
+              enabled: true,
+              delay: 150,
             },
+            dynamicAnimation: {
+              enabled: true,
+              speed: 350,
+            },
+          },
+          stacked: false,
+          background,
+          toolbar: {
+            show: true,
           },
         },
       }
     },
     height() {
-      return Math.max(100, this.graph.height * 100)
+      return `${63 + this.graph.h}%`
     },
     series() {
-      return [
-        {
-          data: this.rawData.data,
-        },
-      ]
+      return this.rawData.series
     },
     chartStyles() {
       return {
-        'max-height': `${this.height}px !important`,
+        'max-height': `10 % !important`,
       }
     },
   },

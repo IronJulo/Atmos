@@ -4,7 +4,58 @@ module.exports = app => {
 
     var router = require("express").Router();
 
-    router.get("/graphs/:dashbaoardId", authService.autenticateToken, graphController.getDashboardGraphs);
-    //router.get("/graph/:graphId", authService.autenticateToken, graphController.getGraph);
-    app.use('/', router);
+    /**
+     * deprecated
+     * Get all graphs of a specific dashboard 
+     */
+    //router.get("/:dashboardId", authService.autenticateToken, graphController.getDashboardGraphs);
+
+    /**
+     * Get specific graph 
+     */
+    router.get("/:graphId", authService.autenticateToken, graphController.getGraph);
+
+    /**
+     * Create a new graph
+     */
+    router.post("/new", authService.autenticateToken, graphController.create);
+
+    /**
+    * Create new specific graphs query  
+    */
+    router.post("/:graphId/queries/new", authService.autenticateToken, graphController.createGraphQuery)
+    
+    /**
+    * Delete specific graphs query  
+    */
+    router.delete("/:graphId/queries/:queryId", authService.autenticateToken, graphController.deleteGraphQuery)
+    
+    /**
+     * Get specific graphs query  
+     */
+    router.get("/:graphId/queries", authService.autenticateToken, graphController.getGraphQueries);
+
+    /**
+     * Edit specific graphs specific query   eg: edit query no 5 TODO delete the first parameter
+     */
+    router.put("/:graphId/queries/:queryId", authService.autenticateToken, graphController.updateGraphQueries)
+
+    /**
+     * DEPRECATED do not use !
+     * Edit specific graphs query  
+     */
+    //router.put("/:graphId/queries", authService.autenticateToken, graphController.updateGraphQueries)
+
+    /**
+     * Get specific graphs data by executing the query in database 
+     */
+    router.get("/:graphId/data", authService.autenticateToken, graphController.getGraphData);
+
+    /**
+     * DEPRECATED do not use !
+     * Get specific graphs data by executing the query in post body !! proceed with caution
+     */
+    router.post("/:graphId/data", authService.autenticateToken, graphController.getGraphData2);
+
+    app.use('/graphs', router);
 }

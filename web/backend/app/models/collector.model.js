@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const SlaveNode = sequelize.define("slaveNode", {
+    const Collector = sequelize.define("collector", {
         x: {
             type: Sequelize.INTEGER
         },
@@ -10,5 +10,5 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         }
     });
-    return SlaveNode;
+    return Collector;
 };

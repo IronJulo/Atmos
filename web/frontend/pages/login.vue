@@ -15,7 +15,7 @@ export default {
           data: loginInfo,
         })
 
-        this.$dialog.notify.success(`Wellcome back ${this.$auth.user.name}`)
+        this.$dialog.notify.success(`Welcome back ${this.$auth.user.name}`)
         this.$router.push('/')
       } catch (err) {
         this.$dialog.notify.error(

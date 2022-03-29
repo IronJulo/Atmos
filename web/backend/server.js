@@ -1,9 +1,7 @@
 const env = require("./app/config/env.config.js");
-
 const express = require("express");
 const app = express();
-
-const db = require("./app/models");
+const {db} = require("./app/models");
 db.sequelize.sync();
 
 const cors = require("cors");
@@ -19,10 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 require("./app/routes/auth.routes")(app);
 require("./app/routes/dashboard.routes")(app);
 require("./app/routes/graph.routes")(app);
-require("./app/routes/masterNode.routes")(app);
-require("./app/routes/slaveNode.routes")(app);
+require("./app/routes/emitter.routes")(app);
+require("./app/routes/collector.routes")(app);
 require("./app/routes/user.routes")(app);
-require("./app/routes/graphData.routes")(app);
+require("./app/routes/data.routes")(app);
 
 app.use((err, req, res, next) => {
     res.status(err.status || 500).json({
