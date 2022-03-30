@@ -5,4 +5,12 @@ module.exports = {
     PASSWORD: "PASSWORD",
     DB: "DB",
     dialect: "dialect"
+
+    INFLUX_DATA_BASE: "db name",
+    INFLUX_PORT: "db port",
+    INFLUX_USER: "db user",
+    INFLUX_PASSWORD: "user password",
 }
+
+CREATE USER rootUser WITH PASSWORD 'password' WITH ALL PRIVILEGES
+influx -username rootUser -password password

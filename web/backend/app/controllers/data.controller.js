@@ -60,7 +60,7 @@ function collectorValuesToInfluxObject(collectorValues, emitterId, collectorId) 
             result.push({
                 measurement: valueName,
                 tags: { host: 'localhost', app: 'atmos_backend', emitterId: emitterId, collectorId: collectorId },
-                fields: { value: collectorValues.values[valueName][j] },
+                fields: { value: ""+collectorValues.values[valueName][j] },
                 timestamp: collectorValues.timestamps[j]
             })
         }
