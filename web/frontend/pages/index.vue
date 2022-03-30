@@ -1,5 +1,5 @@
 <template>
-  <v-parallax src="https://wallpaperaccess.com/full/1369012.jpg">
+  <v-parallax src="https://wallpaperaccess.com/full/1369012.jpg" height="1080" >
     <v-card
       elevation="3"
       outlined
@@ -32,10 +32,8 @@
     </v-card>
     <v-row align="top" justify="center">
       <v-col class="text-center">
-        <h1>toto</h1>
       </v-col>
       <v-col class="text-center">
-        <h1>toto</h1>
       </v-col>
     </v-row>
   </v-parallax>
