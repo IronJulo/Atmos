@@ -23,10 +23,10 @@ exports.getUserEmitters = async (req, res, next) => {
 /**
  * Deprecated route do not use
  */
-exports.getEmitterById = async (req, res, next) => {
+/*exports.getEmitterById = async (req, res, next) => {
     try {
         console.log("User requested 1 emitter data!");
-        const emitter = await emitterService.findOneById(req.params.emitterId);
+        const emitter = await getEmitterById(req.params.emitterId);
         if (emitter.userId != req.user.id) {
             throw new errorService.PermissionDeniedError();
         }
@@ -37,7 +37,12 @@ exports.getEmitterById = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-};
+};*/
+
+exports.getEmitterById = async (id) => {
+    console.log("i dddd");
+    return await emitterService.findOneById(id);
+}
 
 /**
  * Create a new emiter

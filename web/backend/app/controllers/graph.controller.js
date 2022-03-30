@@ -106,7 +106,7 @@ exports.getGraphData = async (req, res, next) => {
                 name: queries[query].alias,
                 type: queries[query].type,
                 unit: queries[query].unit,
-                data: await dataController.executeQuery(queries[query])
+                data: await dataController.executeQuery(queries[query], req.query['from'], req.query['to'])
             })
         }
         console.log(result)

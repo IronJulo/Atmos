@@ -1,4 +1,5 @@
 const { influxClient } = require("../models");
+const emitterController = require("./emitter.controller");
 
 
 /**
@@ -33,7 +34,7 @@ exports.saveData = async (req, res, next) => {
 
     let influxObjects = [];
     console.log(req.body)
-    
+
     for (let collectorId in req.body.collectorsValues) {
         console.log("collector");
         console.log(collectorId);
@@ -73,11 +74,41 @@ function collectorValuesToInfluxObject(collectorValues, emitterId, collectorId) 
  * return [[timestamp, value],[timestamp, value],...,[timestamp, value],]
 */
 
-exports.executeQuery = async (query) => {
+exports.executeQuery = async (query, timestampFrom, timestampTo) => {
 
-    const result = await influxClient.query("select * from " + query.measurement); // TODO
-
+    const result = await influxClient.query( await buildQuery(query, timestampFrom, timestampTo)); // TODO
 
     const resultData = result.map((data) => ([parseInt(data.time.getNanoTime()), data.value]));
+    console.log(resultData)
     return resultData;
 };
+
+
+async function buildQuery(query, timestampFrom, timestampTo) {
+    const emitter = await emitterController.getEmitterById(query.emitterId);
+    let request = `select * from ${query.measurement}`;
+
+    request +=  ` where emitterId = '${emitter.key}'`
+
+    if(! timestampTo || timestampTo == 0){
+        request +=  ` and time <= now()`
+    } else {
+        request +=  ` and time <= ${timestampTo}`
+    }
+
+    if(! timestampFrom || timestampFrom == 0){
+        request +=  ` and time >= now() - 2000h`
+    } else {
+        request +=  ` and time >= ${timestampFrom}`
+    }
+
+
+
+    /*if (query.grouping) {
+        request += ` GROUP BY 1d;`;
+    }*/
+
+
+    console.log(request)
+    return request
+}

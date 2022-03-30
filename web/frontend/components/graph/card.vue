@@ -76,20 +76,21 @@ export default {
     },
   }),
   async fetch() {
-    const timestampFrom =
+    const timestampFrom = 
       Date.parse(this.timeData.dateFrom + 'T' + this.timeData.hourFrom) ||
-      Date.now() - 432000000
+      Date.now() - (82800000*4)
     const timestampTo =
       Date.parse(this.timeData.dateTo + 'T' + this.timeData.hourTo) ||
-      Date.now().toString()
+      0
+      // Date.now().toString()
 
     console.log(timestampFrom)
     console.log(timestampTo)
 
     this.rawData = await this.$axios.$get(`/api/graphs/${this.graph.i}/data`, {
       params: {
-        from: timestampFrom,
-        to: timestampTo,
+        from: Math.floor(timestampFrom/1000),
+        to: Math.floor(timestampTo/1000),
       },
     })
     console.log("this.rawData");
